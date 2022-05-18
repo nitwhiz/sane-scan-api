@@ -3,7 +3,7 @@
 ## Usage
 
 ```http request
-GET http://<server>:3000/scan?format=png&resolution=300&mode=color
+GET http://localhost:3000/scan?format=png&resolution=300&mode=color
 ```
 
 ```text
