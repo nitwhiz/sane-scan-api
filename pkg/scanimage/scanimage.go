@@ -43,6 +43,7 @@ func (s *ExecutionError) Error() string {
 }
 
 type ScanImage struct {
+	scanning   bool
 	Command    string
 	Device     string
 	Format     string
@@ -53,7 +54,8 @@ type ScanImage struct {
 
 func New() *ScanImage {
 	return &ScanImage{
-		Command: "scanimage",
+		scanning: false,
+		Command:  "scanimage",
 	}
 }
 
@@ -110,6 +112,16 @@ func (s *ScanImage) GetMimeType() string {
 }
 
 func (s *ScanImage) Scan() (*bytes.Buffer, error) {
+	if s.scanning {
+		return nil, &ExecutionError{Message: "scanner is already running"}
+	}
+
+	defer func() {
+		s.scanning = false
+	}()
+
+	s.scanning = true
+
 	if err := s.augment(); err != nil {
 		return nil, err
 	}
